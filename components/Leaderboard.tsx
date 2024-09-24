@@ -105,7 +105,9 @@ const Leaderboard = () => {
             </td>
             <td>
               <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-200 rounded-full mr-3"></div>
+                <div className="w-10 h-10 rounded-full mr-3">
+                    <img src={`https://loremflickr.com/150/150/human,portrait?random=${user.id}`}  alt={user.name} className="w-full h-full rounded-full" />
+                </div>
                 <span className="font-medium text-gray-900">{user.name}</span>
               </div>
             </td>
