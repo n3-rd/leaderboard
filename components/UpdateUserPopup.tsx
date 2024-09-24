@@ -35,11 +35,11 @@ export default function UpdateUserPopup({ user, onClose, onUpdate }: UpdateUserP
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-        <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-gray-100">Update Kill Count</h2>
+      <div className="bg-white  p-4 rounded-lg shadow-md">
+        <h2 className="text-xl font-bold mb-4 text-gray-900 ">Update Kill Count</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300 mb-2">Kill Count:</label>
+            <label className="block text-gray-700  mb-2">Kill Count:</label>
             <input
               type="number"
               value={killCount}
