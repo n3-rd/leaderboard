@@ -1,6 +1,5 @@
 import Leaderboard from '../components/Leaderboard';
-import UpdateUserStat from '../components/UpdateUserStat';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 export default function Home() {
   return (
