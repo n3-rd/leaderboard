@@ -1,5 +1,5 @@
-import Leaderboard from '../components/Leaderboard';
-import UpdateUserStat from '../components/UpdateUserStat';
+import Leaderboard from '../../components/Leaderboard';
+import UpdateUserStat from '../../components/UpdateUserStat';
 
 export default function Home() {
   return (
