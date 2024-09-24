@@ -1,4 +1,4 @@
-import Leaderboard from '../../components/Leaderboard';
+import Leaderboard from '../../components/leaderboard';
 import UpdateUserStat from '../../components/UpdateUserStat';
 
 export default function Home() {
