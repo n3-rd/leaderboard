@@ -23,24 +23,28 @@ export default function UpdateUserStat() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>User ID:</label>
+    <form onSubmit={handleSubmit} className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md mb-4">
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-gray-300 mb-2">User ID:</label>
         <input
           type="number"
           value={userId}
           onChange={(e) => setUserId(Number(e.target.value))}
+          className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md"
         />
       </div>
-      <div>
-        <label>Kill Count:</label>
+      <div className="mb-4">
+        <label className="block text-gray-700 dark:text-gray-300 mb-2">Kill Count:</label>
         <input
           type="number"
           value={killCount}
           onChange={(e) => setKillCount(Number(e.target.value))}
+          className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md"
         />
       </div>
-      <button type="submit">Update Stat</button>
+      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
+        Update Stat
+      </button>
     </form>
   );
 }

@@ -20,11 +20,11 @@ export default function Leaderboard() {
   const topUsers = [...users].sort((a, b) => b.kill_count - a.kill_count).slice(0, 30);
 
   return (
-    <div>
-      <h1>Leaderboard</h1>
-      <ol>
+    <div className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+      <h1 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">Leaderboard</h1>
+      <ol className="list-decimal list-inside">
         {topUsers.map(user => (
-          <li key={user.id}>
+          <li key={user.id} className="mb-2 text-gray-700 dark:text-gray-300">
             {user.name} - {user.kill_count} kills
           </li>
         ))}
