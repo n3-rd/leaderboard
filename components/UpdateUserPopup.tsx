@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 interface User {
   id: number;
@@ -25,10 +26,10 @@ export default function UpdateUserPopup({ user, onClose, onUpdate }: UpdateUserP
       body: JSON.stringify({ id: user.id, kill_count: killCount }),
     });
     if (response.ok) {
-      alert('User stat updated');
+        toast.success('User stat updated');
       onUpdate({ ...user, kill_count: killCount });
     } else {
-      alert('Failed to update user stat');
+        toast.error('Failed to update user stat');
     }
   };
 
@@ -43,7 +44,7 @@ export default function UpdateUserPopup({ user, onClose, onUpdate }: UpdateUserP
               type="number"
               value={killCount}
               onChange={(e) => setKillCount(Number(e.target.value))}
-              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md"
+              className="w-full p-2 border border-gray-300 dark:border-gray-700 rounded-md text-black"
             />
           </div>
           <div className="flex justify-end">

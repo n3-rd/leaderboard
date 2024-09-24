@@ -1,6 +1,6 @@
 'use client'
-import React, { useEffect, useState } from 'react';
-import { ArrowUp, ArrowDown } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { ArrowUp, ArrowDown, Minus } from 'lucide-react';
 import UpdateUserPopup from './UpdateUserPopup';
 
 interface User {
@@ -12,11 +12,15 @@ interface User {
 const Leaderboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const previousUsersRef = useRef<User[]>([]);
 
   useEffect(() => {
     fetch('/api/users')
       .then(response => response.json())
-      .then(data => setUsers(data));
+      .then(data => {
+        setUsers(data);
+        previousUsersRef.current = data;
+      });
   }, []);
 
   const topUsers = [...users].sort((a, b) => b.kill_count - a.kill_count);
@@ -34,9 +38,24 @@ const Leaderboard = () => {
       const updatedUsers = prevUsers.map(user =>
         user.id === updatedUser.id ? updatedUser : user
       );
+      previousUsersRef.current = prevUsers;
       return updatedUsers.sort((a, b) => b.kill_count - a.kill_count);
     });
     setSelectedUser(null);
+  };
+
+  const getArrow = (user: User) => {
+    const previousUser = previousUsersRef.current.find(u => u.id === user.id);
+    if (previousUser) {
+      if (user.kill_count > previousUser.kill_count) {
+        return <ArrowUp className="text-green-500 mr-1" size={16} />;
+      } else if (user.kill_count < previousUser.kill_count) {
+        return <ArrowDown className="text-red-500 mr-1" size={16} />;
+      } else {
+        return <Minus className="text-gray-500 mr-1" size={16} />;
+      }
+    }
+    return <Minus className="text-gray-500 mr-1" size={16} />;
   };
 
   return (
@@ -55,8 +74,7 @@ const Leaderboard = () => {
             <tr key={user.id} className="border-t border-gray-200">
               <td className="py-4">
                 <div className="flex items-center">
-                  {index === 0 && <ArrowUp className="text-green-500 mr-1" size={16} />}
-                  {index === 1 && <ArrowDown className="text-red-500 mr-1" size={16} />}
+                  {getArrow(user)}
                   <span className={`font-semibold ${index === 0 ? 'text-blue-600' : 'text-gray-900'}`}>
                     {index + 1}{index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'}
                   </span>
