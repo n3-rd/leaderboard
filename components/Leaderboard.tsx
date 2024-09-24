@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import { ArrowUp, ArrowDown, Minus, Pencil } from 'lucide-react';
 import UpdateUserPopup from './UpdateUserPopup';
 import Top3Leaderboard from './Top3Leaderboard';
@@ -15,23 +15,44 @@ const Leaderboard = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [activeTab, setActiveTab] = useState<'full' | 'top3'>('full');
-  const previousUsersRef = useRef<User[]>([]);
+  const previousRankingsRef = useRef<Map<number, number>>(new Map());
 
   useEffect(() => {
     fetch('/api/users')
       .then(response => response.json())
       .then(data => {
-        console.log('users',data);
+        console.log('users', data);
         setUsers(data);
-        previousUsersRef.current = data;
       });
   }, []);
 
-  const topUsers = [...users].sort((a, b) => b.kill_count - a.kill_count);
-  const top3Users = topUsers.slice(0, 3).map((user, index) => ({
-    ...user,
-    prize: index === 0 ? 100 : index === 1 ? 60 : 40,
-  }));
+  const topUsers = useMemo(() => {
+    return [...users].sort((a, b) => b.kill_count - a.kill_count);
+  }, [users]);
+
+  const top3Users = useMemo(() => {
+    return topUsers.slice(0, 3).map((user, index) => ({
+      ...user,
+      prize: index === 0 ? 100 : index === 1 ? 60 : 40,
+    }));
+  }, [topUsers]);
+
+  useEffect(() => {
+    updatePreviousRankings(topUsers);
+  }, [topUsers]);
+
+  const updatePreviousRankings = (currentUsers: User[]) => {
+    const newRankings = new Map<number, number>();
+    currentUsers.forEach((user, index) => {
+      const previousRank = previousRankingsRef.current.get(user.id);
+      if (previousRank === undefined) {
+        newRankings.set(user.id, index + 1);
+      } else {
+        newRankings.set(user.id, previousRank);
+      }
+    });
+    previousRankingsRef.current = newRankings;
+  };
 
   const handleUpdateClick = (user: User) => {
     setSelectedUser(user);
@@ -43,27 +64,22 @@ const Leaderboard = () => {
 
   const handleUserUpdate = (updatedUser: User) => {
     setUsers(prevUsers => {
-      const updatedUsers = prevUsers.map(user =>
+      return prevUsers.map(user =>
         user.id === updatedUser.id ? updatedUser : user
       );
-      previousUsersRef.current = prevUsers;
-      return updatedUsers.sort((a, b) => b.kill_count - a.kill_count);
     });
     setSelectedUser(null);
   };
 
-  const getArrow = (user: User) => {
-    const previousUser = previousUsersRef.current.find(u => u.id === user.id);
-    if (previousUser) {
-      if (user.kill_count > previousUser.kill_count) {
-        return <ArrowUp className="text-green-500 mr-1" size={16} />;
-      } else if (user.kill_count < previousUser.kill_count) {
-        return <ArrowDown className="text-red-500 mr-1" size={16} />;
-      } else {
-        return <Minus className="text-gray-500 mr-1" size={16} />;
-      }
+  const getArrow = (user: User, currentRank: number) => {
+    const previousRank = previousRankingsRef.current.get(user.id) || currentRank;
+    if (currentRank < previousRank) {
+      return <ArrowUp className="text-green-500 mr-1" size={16} />;
+    } else if (currentRank > previousRank) {
+      return <ArrowDown className="text-red-500 mr-1" size={16} />;
+    } else {
+      return <Minus className="text-gray-500 mr-1" size={16} />;
     }
-    return <Minus className="text-gray-500 mr-1" size={16} />;
   };
 
   const renderUsers = (usersToRender: User[]) => (
@@ -81,7 +97,7 @@ const Leaderboard = () => {
           <tr key={user.id} className="border-t border-gray-200">
             <td className="py-4">
               <div className="flex items-center">
-                {getArrow(user)}
+                {getArrow(user, index + 1)}
                 <span className={`font-semibold ${index === 0 ? 'text-blue-600' : 'text-gray-900'}`}>
                   {index + 1}{index === 0 ? 'st' : index === 1 ? 'nd' : index === 2 ? 'rd' : 'th'}
                 </span>
