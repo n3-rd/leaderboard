@@ -1,12 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import users from '../../../data/users.json';
+
 let userData = [...users];
 
 export async function GET() {
   return NextResponse.json(userData);
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const { id, kill_count } = await request.json();
   const user = userData.find(user => user.id === id);
   if (user) {
@@ -15,13 +16,4 @@ export async function POST(request: NextRequest) {
   } else {
     return NextResponse.json({ message: 'User not found' }, { status: 404 });
   }
-}
-
-export async function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      'Allow': 'GET, POST, OPTIONS'
-    }
-  });
 }

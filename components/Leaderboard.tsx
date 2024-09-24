@@ -21,6 +21,7 @@ const Leaderboard = () => {
     fetch('/api/users')
       .then(response => response.json())
       .then(data => {
+        console.log('users',data);
         setUsers(data);
         previousUsersRef.current = data;
       });
