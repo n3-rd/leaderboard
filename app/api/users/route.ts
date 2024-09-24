@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import users from '../../../data/users.json';
 
-let userData = [...users];
+const userData = [...users];
 
 export async function GET() {
   return NextResponse.json(userData);

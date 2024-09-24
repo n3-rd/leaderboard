@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import users from '../../data/users.json';
 
-let userData = [...users];
+const userData = [...users];
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
