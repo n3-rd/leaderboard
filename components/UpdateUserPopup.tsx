@@ -5,6 +5,7 @@ interface User {
   id: number;
   name: string;
   kill_count: number;
+  image: string;
 }
 
 interface UpdateUserPopupProps {

@@ -8,6 +8,7 @@ interface User {
   id: number;
   name: string;
   kill_count: number;
+  image: string;
   prize?: number;
 }
 
@@ -106,7 +107,7 @@ const Leaderboard = () => {
             <td>
               <div className="flex items-center">
                 <div className="w-10 h-10 rounded-full mr-3">
-                    <img src={`https://loremflickr.com/150/150/human,portrait?random=${user.id}`}  alt={user.name} className="w-full h-full rounded-full" />
+                    <img src={user.image}  alt={user.name} className="w-full h-full rounded-full" />
                 </div>
                 <span className="font-medium text-gray-900">{user.name}</span>
               </div>
